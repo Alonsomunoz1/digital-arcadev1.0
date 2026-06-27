@@ -1,0 +1,81 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            # ---------- ms-catalogo (juegos, items, categorias, item-categorias) ----------
+            - id: catalogo-juegos
+              uri: lb://ms-catalogo
+              predicates:
+                - Path=/api/v1/juegos/**
+
+            - id: catalogo-items
+              uri: lb://ms-catalogo
+              predicates:
+                - Path=/api/v1/items/**
+
+            - id: catalogo-categorias
+              uri: lb://ms-catalogo
+              predicates:
+                - Path=/api/v1/categorias/**
+
+            - id: catalogo-item-categorias
+              uri: lb://ms-catalogo
+              predicates:
+                - Path=/api/v1/item-categorias/**
+
+            - id: catalogo-docs
+              uri: lb://ms-catalogo
+              predicates:
+                - Path=/ms-catalogo/api-docs/**
+
+            # ---------- ms-mercado (publicaciones de venta, metodos de pago) ----------
+            - id: mercado-publicaciones
+              uri: lb://ms-mercado
+              predicates:
+                - Path=/api/v1/mercado/**
+
+            - id: mercado-metodospago
+              uri: lb://ms-mercado
+              predicates:
+                - Path=/api/v1/metodospago/**
+
+            - id: mercado-docs
+              uri: lb://ms-mercado
+              predicates:
+                - Path=/ms-mercado/api-docs/**
+
+            # ---------- ms-usuarios (usuarios / roles) ----------
+            - id: usuarios-service
+              uri: lb://ms-usuarios
+              predicates:
+                - Path=/api/v1/usuarios/**
+
+            - id: usuarios-docs
+              uri: lb://ms-usuarios
+              predicates:
+                - Path=/ms-usuarios/api-docs/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui/index.html
+    urls:
+      - name: Catalogo
+        url: /ms-catalogo/api-docs
+      - name: Mercado
+        url: /ms-mercado/api-docs
+      - name: Usuarios
+        url: /ms-usuarios/api-docs
+  api-docs:
+    enabled: true
